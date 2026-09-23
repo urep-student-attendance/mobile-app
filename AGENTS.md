@@ -41,4 +41,4 @@ The desktop layout shows the project brief and the app in a phone frame; narrow 
 
 ### Deployment
 
-Deploy Manager on Alireza's VPS releases validated `main` commits; see `docs/deployment.md`. Use the user-level `vps-operations` skill for server work. The Cloudflare DNS record is proxied; with the `cloudflare` MCP server connected, DNS changes can be made directly.
+Deploy Manager on Alireza's VPS releases validated `main` commits; see `docs/deployment.md`. Use the user-level `vps-operations` skill for server work. The Cloudflare DNS record is proxied. DNS changes go through the Cloudflare MCP server (`https://mcp.cloudflare.com/mcp`) when it is connected, or the Cloudflare dashboard.
