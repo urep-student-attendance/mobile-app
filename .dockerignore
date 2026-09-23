@@ -1,7 +1,7 @@
 node_modules
 dist
 coverage
-.git
 .github
 *.log
 .env
+# .git stays in the build context so the build can stamp its commit SHA; the runtime image copies only dist/.
