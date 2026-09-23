@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "host": {"name":"Personal VPS","platform":"Ubuntu + Docker","edge":"Caddy","manager":"Deploy Manager"},
+  "manager": {"hostname":"deploy.alirezaafshan.com","port":9019,"repository":"YesterdaysLemon/deploy-manager","branch":"main","probeIntervalMs":30000,"probeTimeoutMs":2500},
+  "apps": [{"id":"urep-attendance","name":"UREP Attendance","description":"Web preview of the UREP student attendance app for PALM reader scans.","kind":"site","repository":"urep-student-attendance/mobile-app","branch":"main","secretEnv":"UREP_ATTENDANCE_DEPLOY_WEBHOOK_SECRET","repoDir":"/opt/urep-attendance/app","repoUser":"deploy-manager","imageName":"urep-attendance","containerName":"urep-attendance","candidateContainerName":"urep-attendance-candidate","publicPort":3250,"candidatePort":3251,"containerPort":8080,"healthPath":"/healthz","hostname":"attendance.alirezaafshan.com"}],
+  "datastores": []
+}
