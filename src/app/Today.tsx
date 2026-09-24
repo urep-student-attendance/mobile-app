@@ -25,32 +25,32 @@ export function Today({ model }: { model: Model }) {
       />
 
       <a className="card summary link-card" href="#/courses">
-        <Ring value={overall.rate} low={overall.rate !== null && overall.rate < MIN_ATTENDANCE_PERCENT} />
+        <Ring value={overall.rate} onBrand low={overall.rate !== null && overall.rate < MIN_ATTENDANCE_PERCENT} />
         <div>
           <dl className="summary-stats">
             <div>
               <dt>
-                <i className="dot" style={{ background: "var(--present)" }} />
+                <i className="dot dot-present" />
                 Attended
               </dt>
               <dd className="num">{overall.attended}</dd>
             </div>
             <div>
               <dt>
-                <i className="dot" style={{ background: "var(--late)" }} />
+                <i className="dot dot-late" />
                 of those, late
               </dt>
               <dd className="num">{overall.late}</dd>
             </div>
             <div>
               <dt>
-                <i className="dot" style={{ background: "var(--absent)" }} />
+                <i className="dot dot-absent" />
                 Missed
               </dt>
               <dd className="num">{overall.missed}</dd>
             </div>
           </dl>
-          <p className="muted" style={{ margin: "8px 0 0", fontSize: 12.5, fontWeight: 600 }}>
+          <p className="summary-note">
             {model.semester.label} · {overall.counted} of {overall.total} classes so far
           </p>
         </div>

@@ -1,45 +1,51 @@
 :root {
-  --bg: #ebe7df;
-  --app-bg: #f7f5f1;
+  /* UDST palette: primary #0055b8, light #efefee, gray #d9d8d6, text #212529 (udst.edu.qa) */
+  --brand: #0055b8;
+  --brand-ink: #ffffff;
+  --bg: #efefee;
+  --app-bg: #f5f5f4;
   --surface: #ffffff;
-  --surface-2: #f1eee8;
-  --ink: #141d2b;
-  --ink-2: #465163;
-  --ink-3: #737d8c;
-  --line: #e2ddd3;
-  --line-strong: #cfc8bb;
-  --accent: #4536d4;
+  --surface-2: #efefee;
+  --ink: #212529;
+  --ink-2: #474d55;
+  --ink-3: #676c73;
+  --line: #d9d8d6;
+  --line-strong: #bcbab6;
+  --accent: #0055b8;
   --accent-ink: #ffffff;
-  --accent-soft: #ebe9fd;
+  --accent-soft: #e3ecf8;
   --present: #15703f;
   --present-soft: #e1f2e8;
   --late: #8f5200;
   --late-soft: #fcefd6;
   --absent: #b42318;
   --absent-soft: #fbe4e1;
-  --muted-soft: #eceef1;
-  --frame: #10151d;
-  --shadow: 0 1px 2px rgb(20 29 43 / 0.05), 0 8px 24px rgb(20 29 43 / 0.06);
-  --font-ui: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Bricolage Grotesque Variable", var(--font-ui);
+  --muted-soft: #ebebea;
+  --frame: #11161d;
+  --shadow: 0 1px 2px rgb(33 37 41 / 0.06), 0 8px 24px rgb(33 37 41 / 0.06);
+  --r-card: 10px;
+  --r-control: 6px;
+  --font-ui: "Lato", "Noto Kufi Arabic Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-ui);
+  --font-arabic: "Noto Kufi Arabic Variable", "Lato", sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, monospace;
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0c1016;
-    --app-bg: #11161e;
-    --surface: #19202a;
-    --surface-2: #202834;
-    --ink: #edf0f4;
-    --ink-2: #b4bdca;
-    --ink-3: #8691a1;
-    --line: #29323f;
-    --line-strong: #3a4554;
-    --accent: #a59cff;
-    --accent-ink: #15123b;
-    --accent-soft: #272450;
+    --bg: #0b0f15;
+    --app-bg: #10151c;
+    --surface: #18202a;
+    --surface-2: #1f2833;
+    --ink: #eef1f5;
+    --ink-2: #b6bfcb;
+    --ink-3: #8a95a4;
+    --line: #2a3340;
+    --line-strong: #3a4655;
+    --accent: #7db2ff;
+    --accent-ink: #06224a;
+    --accent-soft: #14304f;
     --present: #62d49b;
     --present-soft: #16301f;
     --late: #f1b04c;
@@ -187,7 +193,7 @@ a {
 }
 
 .statusbar span:last-child {
-  font-weight: 600;
+  font-weight: 400;
   color: var(--ink-3);
 }
 
@@ -217,14 +223,29 @@ a {
   gap: 3px;
   min-height: 58px;
   font-size: 11.5px;
-  font-weight: 650;
+  font-weight: 700;
   color: var(--ink-3);
   text-decoration: none;
   border-radius: 12px;
 }
 
+.tab {
+  position: relative;
+}
+
 .tab[aria-current="page"] {
   color: var(--accent);
+}
+
+.tab[aria-current="page"]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 22%;
+  right: 22%;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--accent);
 }
 
 .tab svg {
@@ -246,7 +267,7 @@ a {
   margin: 0;
   font-family: var(--font-display);
   font-size: 32px;
-  font-weight: 650;
+  font-weight: 700;
   letter-spacing: -0.025em;
   line-height: 1.05;
 }
@@ -254,7 +275,7 @@ a {
 .screen-head .sub {
   margin: 0 0 6px;
   font-size: 13px;
-  font-weight: 650;
+  font-weight: 700;
   color: var(--ink-3);
 }
 
@@ -265,10 +286,10 @@ a {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: var(--ink);
-  color: var(--app-bg);
+  background: var(--brand);
+  color: var(--brand-ink);
   font-size: 13px;
-  font-weight: 750;
+  font-weight: 700;
   text-decoration: none;
   letter-spacing: 0.02em;
 }
@@ -279,7 +300,7 @@ a {
   gap: 2px;
   margin: 10px 0 0 -6px;
   padding: 6px 8px 6px 2px;
-  font-weight: 650;
+  font-weight: 700;
   font-size: 14px;
   color: var(--accent);
   text-decoration: none;
@@ -289,18 +310,17 @@ a {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin: 26px 2px 10px;
-  font-size: 13px;
-  font-weight: 750;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink-3);
+  margin: 26px 2px 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--accent);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
 }
 
 .section-title a {
-  text-transform: none;
-  letter-spacing: 0;
-  font-weight: 650;
+  font-size: 14px;
+  font-weight: 700;
   color: var(--accent);
   text-decoration: none;
 }
@@ -308,7 +328,7 @@ a {
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: var(--r-card);
   padding: 16px;
 }
 
@@ -344,7 +364,7 @@ a {
   gap: 5px;
   height: 26px;
   padding: 0 10px 0 8px;
-  border-radius: 999px;
+  border-radius: var(--r-control);
   font-size: 12.5px;
   font-weight: 700;
   white-space: nowrap;
@@ -389,6 +409,23 @@ a {
   align-items: center;
   gap: 18px;
   padding: 18px;
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--brand-ink);
+}
+
+.summary .ring-value span,
+.summary .summary-stats dt,
+.summary .summary-note {
+  color: rgb(255 255 255 / 0.82);
+}
+
+.summary .summary-stats dd {
+  color: var(--brand-ink);
+}
+
+.summary:hover {
+  border-color: var(--brand);
 }
 
 .ring {
@@ -415,7 +452,7 @@ a {
   display: block;
   font-family: var(--font-display);
   font-size: 26px;
-  font-weight: 650;
+  font-weight: 700;
   letter-spacing: -0.03em;
 }
 
@@ -447,12 +484,12 @@ a {
   align-items: center;
   gap: 8px;
   color: var(--ink-2);
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .summary-stats dd {
   margin: 0;
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .dot {
@@ -462,13 +499,42 @@ a {
   flex: none;
 }
 
+.dot-present {
+  background: var(--present);
+}
+
+.dot-late {
+  background: var(--late);
+}
+
+.dot-absent {
+  background: var(--absent);
+}
+
+.summary .dot-present {
+  background: #7fe0a9;
+}
+
+.summary .dot-late {
+  background: #ffc76b;
+}
+
+.summary .dot-absent {
+  background: #ffa597;
+}
+
+.summary-note {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+}
+
 .alert {
   display: flex;
   gap: 12px;
   align-items: flex-start;
   margin-top: 10px;
   padding: 14px 16px;
-  border-radius: 18px;
+  border-radius: var(--r-card);
   background: var(--absent-soft);
   color: var(--ink);
   text-decoration: none;
@@ -511,7 +577,7 @@ a {
 
 .class-time strong {
   font-size: 15px;
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .class-time small {
@@ -523,17 +589,17 @@ a {
 .class-time span {
   font-size: 12.5px;
   color: var(--ink-3);
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .class-title {
   margin: 0;
   font-size: 15px;
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .class-title span {
-  font-weight: 550;
+  font-weight: 400;
   color: var(--ink-2);
 }
 
@@ -544,7 +610,7 @@ a {
   gap: 4px 10px;
   margin-top: 3px;
   font-size: 12.5px;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--ink-3);
 }
 
@@ -566,7 +632,7 @@ a {
   gap: 8px;
   margin-top: 10px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--ink-2);
 }
 
@@ -631,7 +697,7 @@ a {
 
 .course-code {
   font-size: 12.5px;
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: 0.02em;
   color: var(--ink-3);
 }
@@ -639,7 +705,7 @@ a {
 .course-name {
   margin: 1px 0 0;
   font-size: 16.5px;
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: -0.01em;
 }
 
@@ -653,14 +719,14 @@ a {
   display: block;
   font-family: var(--font-display);
   font-size: 26px;
-  font-weight: 650;
+  font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.05;
 }
 
 .course-rate span {
   font-size: 11.5px;
-  font-weight: 650;
+  font-weight: 700;
   color: var(--ink-3);
 }
 
@@ -703,13 +769,13 @@ a {
   gap: 8px;
   margin-top: 8px;
   font-size: 12.5px;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--ink-3);
 }
 
 .flag {
   color: var(--absent);
-  font-weight: 750;
+  font-weight: 700;
 }
 
 /* ---------- Course detail ---------- */
@@ -726,7 +792,7 @@ a {
 
 .tile {
   padding: 12px 8px;
-  border-radius: 16px;
+  border-radius: var(--r-card);
   background: var(--surface);
   border: 1px solid var(--line);
   text-align: center;
@@ -736,13 +802,13 @@ a {
   display: block;
   font-family: var(--font-display);
   font-size: 22px;
-  font-weight: 650;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 
 .tile span {
   font-size: 11.5px;
-  font-weight: 650;
+  font-weight: 700;
   color: var(--ink-3);
 }
 
@@ -753,7 +819,7 @@ a {
 .budget p {
   margin: 0;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .budget small {
@@ -761,7 +827,7 @@ a {
   margin-top: 4px;
   font-size: 12.5px;
   color: var(--ink-3);
-  font-weight: 550;
+  font-weight: 400;
 }
 
 .pips {
@@ -787,14 +853,14 @@ a {
   gap: 4px;
   margin: 22px 0 12px;
   padding: 4px;
-  border-radius: 14px;
+  border-radius: var(--r-control);
   background: var(--surface-2);
 }
 
 .segmented button {
   min-height: 36px;
   border: 0;
-  border-radius: 10px;
+  border-radius: 4px;
   background: transparent;
   font-size: 13.5px;
   font-weight: 700;
@@ -811,7 +877,7 @@ a {
 .list {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: var(--r-card);
   overflow: hidden;
 }
 
@@ -835,7 +901,7 @@ a {
 .row-detail {
   grid-column: 1 / -1;
   font-size: 12.5px;
-  font-weight: 550;
+  font-weight: 400;
   color: var(--ink-3);
 }
 
@@ -852,7 +918,7 @@ a {
   flex: none;
   min-height: 34px;
   padding: 0 14px;
-  border-radius: 999px;
+  border-radius: var(--r-control);
   border: 1px solid var(--line-strong);
   background: transparent;
   font-size: 13px;
@@ -884,7 +950,7 @@ a {
   place-items: center;
   width: 30px;
   height: 30px;
-  border-radius: 10px;
+  border-radius: var(--r-control);
 }
 
 .scan-icon svg {
@@ -901,7 +967,7 @@ a {
 .scan-detail {
   margin-top: 2px;
   font-size: 12.5px;
-  font-weight: 550;
+  font-weight: 400;
   color: var(--ink-3);
 }
 
@@ -915,7 +981,7 @@ a {
 .scan-time span {
   display: block;
   font-size: 11.5px;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--ink-3);
 }
 
@@ -956,13 +1022,13 @@ a {
 .identity h2 {
   margin: 0;
   font-size: 18px;
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .identity p {
   margin: 1px 0 0;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--ink-3);
 }
 
@@ -981,7 +1047,7 @@ a {
 
 .kv dt {
   color: var(--ink-3);
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .kv dd {
@@ -1000,7 +1066,7 @@ a {
 .card-head h2 {
   margin: 0;
   font-size: 15px;
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .card-note {
@@ -1044,12 +1110,12 @@ a {
   width: 100%;
   min-height: 50px;
   padding: 0 18px;
-  border-radius: 16px;
+  border-radius: var(--r-control);
   border: 0;
   background: var(--ink);
   color: var(--app-bg);
   font-size: 15px;
-  font-weight: 750;
+  font-weight: 700;
   text-decoration: none;
   cursor: pointer;
 }
@@ -1130,11 +1196,41 @@ a {
 .brandmark {
   display: grid;
   place-items: center;
-  width: 64px;
-  height: 64px;
-  border-radius: 20px;
-  background: var(--ink);
-  color: var(--app-bg);
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: var(--brand-ink);
+  color: var(--brand);
+}
+
+.app.is-signin {
+  background: var(--brand);
+  color: var(--brand-ink);
+}
+
+.app.is-signin .statusbar span:last-child {
+  color: rgb(255 255 255 / 0.8);
+}
+
+.signin-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.uni {
+  display: grid;
+  gap: 2px;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.uni [lang="ar"] {
+  font-family: var(--font-arabic);
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .brandmark svg {
@@ -1146,7 +1242,7 @@ a {
   margin: 22px 0 6px;
   font-family: var(--font-display);
   font-size: 34px;
-  font-weight: 650;
+  font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.05;
 }
@@ -1154,7 +1250,35 @@ a {
 .signin > p {
   margin: 0 0 28px;
   font-size: 15px;
-  color: var(--ink-2);
+  color: rgb(255 255 255 / 0.85);
+}
+
+.signin .field label {
+  color: rgb(255 255 255 / 0.9);
+}
+
+.signin .field input {
+  border-color: transparent;
+  color: #212529;
+  background: #ffffff;
+}
+
+.signin .field input:focus-visible {
+  outline-color: #ffffff;
+  outline-offset: 2px;
+}
+
+.signin .field-error {
+  color: #ffd3cd;
+}
+
+.signin .button {
+  background: #ffffff;
+  color: var(--brand);
+}
+
+.signin :focus-visible {
+  outline-color: #ffffff;
 }
 
 .field {
@@ -1172,11 +1296,11 @@ a {
 .field input {
   min-height: 50px;
   padding: 0 14px;
-  border-radius: 14px;
+  border-radius: var(--r-control);
   border: 1px solid var(--line-strong);
   background: var(--surface);
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .field input:focus-visible {
@@ -1191,7 +1315,7 @@ a {
 
 .field-error {
   font-size: 12.5px;
-  font-weight: 650;
+  font-weight: 700;
   color: var(--absent);
 }
 
@@ -1200,11 +1324,11 @@ a {
   gap: 10px;
   margin-top: 18px;
   padding: 12px 14px;
-  border-radius: 14px;
-  background: var(--surface-2);
+  border-radius: var(--r-control);
+  background: rgb(255 255 255 / 0.12);
   font-size: 12.5px;
-  font-weight: 550;
-  color: var(--ink-2);
+  font-weight: 400;
+  color: rgb(255 255 255 / 0.92);
 }
 
 .demo-note svg {
@@ -1214,8 +1338,12 @@ a {
   margin-top: 1px;
 }
 
+.signin > .demo-note {
+  margin: 18px 0 0;
+}
+
 .demo-note a {
-  color: var(--accent);
+  color: #ffffff;
   font-weight: 700;
 }
 
@@ -1229,17 +1357,25 @@ a {
 .brief-eyebrow {
   margin: 0;
   font-size: 13px;
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent);
 }
 
+.brief-ar {
+  margin: 6px 0 0;
+  text-align: left;
+  font-family: var(--font-arabic);
+  font-size: 15px;
+  color: var(--ink-2);
+}
+
 .brief h1 {
-  margin: 12px 0 14px;
+  margin: 14px 0 14px;
   font-family: var(--font-display);
   font-size: clamp(38px, 4vw, 52px);
-  font-weight: 650;
+  font-weight: 700;
   letter-spacing: -0.035em;
   line-height: 1;
 }
@@ -1259,7 +1395,7 @@ a {
   padding: 0;
   list-style: none;
   font-size: 13px;
-  font-weight: 650;
+  font-weight: 700;
   color: var(--ink-3);
 }
 
@@ -1277,7 +1413,7 @@ a {
   margin: 0 0 6px;
   font-family: var(--font-display);
   font-size: 23px;
-  font-weight: 650;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 
@@ -1289,7 +1425,7 @@ a {
 
 .playground {
   padding: 18px 18px 16px;
-  border-radius: 22px;
+  border-radius: var(--r-card);
   background: var(--surface);
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
@@ -1320,7 +1456,7 @@ a {
 
 .control output {
   font-size: 14px;
-  font-weight: 750;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
@@ -1341,7 +1477,7 @@ a {
   gap: 8px;
   grid-column: 1 / -1;
   font-size: 13.5px;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--ink-2);
   cursor: pointer;
   min-height: 28px;
@@ -1370,7 +1506,7 @@ a {
   gap: 6px 14px;
   margin-top: 10px;
   font-size: 12px;
-  font-weight: 650;
+  font-weight: 700;
   color: var(--ink-3);
 }
 
@@ -1458,11 +1594,11 @@ a {
   place-items: center;
   width: 34px;
   height: 34px;
-  border-radius: 11px;
+  border-radius: var(--r-control);
   background: var(--surface);
   border: 1px solid var(--line-strong);
   font-size: 13px;
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .flow li.is-here .flow-num {
@@ -1477,7 +1613,7 @@ a {
 
 .flow-body strong {
   font-size: 15px;
-  font-weight: 750;
+  font-weight: 700;
 }
 
 .flow-body p {
@@ -1490,9 +1626,9 @@ a {
   display: inline-block;
   margin-left: 8px;
   padding: 2px 8px;
-  border-radius: 999px;
+  border-radius: 4px;
   font-size: 11px;
-  font-weight: 750;
+  font-weight: 700;
   vertical-align: 2px;
   background: var(--muted-soft);
   color: var(--ink-2);
@@ -1523,7 +1659,7 @@ a {
   padding: 0 10px 8px 0;
   text-align: left;
   font-size: 11.5px;
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--ink-3);
@@ -1537,7 +1673,7 @@ a {
 }
 
 .data-table td:first-child {
-  font-weight: 650;
+  font-weight: 700;
   color: var(--ink);
 }
 

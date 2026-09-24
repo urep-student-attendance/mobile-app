@@ -1,10 +1,10 @@
 {
-  "name": "UREP Attendance",
+  "name": "UDST Attendance",
   "short_name": "Attendance",
   "description": "Classes, palm scans and attendance from the PALM readers.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f7f5f1",
-  "theme_color": "#f7f5f1",
+  "background_color": "#0055b8",
+  "theme_color": "#0055b8",
   "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
 }

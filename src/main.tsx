@@ -1,7 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "@fontsource-variable/manrope";
-import "@fontsource-variable/bricolage-grotesque";
+import "@fontsource/lato/400.css";
+import "@fontsource/lato/700.css";
+import "@fontsource/lato/900.css";
+import "@fontsource-variable/noto-kufi-arabic";
 import "./styles.css";
 import { App } from "./App";
 

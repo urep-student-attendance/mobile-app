@@ -41,7 +41,20 @@ export function StatusChip({ view }: { view: LectureView }) {
   );
 }
 
-export function Ring({ value, size = 96, low }: { value: number | null; size?: number; low?: boolean }) {
+export function Ring({
+  value,
+  size = 96,
+  low,
+  onBrand,
+}: {
+  value: number | null;
+  size?: number;
+  low?: boolean;
+  /** drawn on the UDST blue panel */
+  onBrand?: boolean;
+}) {
+  const track = onBrand ? "rgb(255 255 255 / 0.22)" : "var(--muted-soft)";
+  const fill = onBrand ? (low ? "#ffb4a9" : "#ffffff") : low ? "var(--absent)" : "var(--present)";
   const stroke = 9;
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
@@ -49,13 +62,13 @@ export function Ring({ value, size = 96, low }: { value: number | null; size?: n
   return (
     <div className="ring" style={{ width: size, height: size }}>
       <svg width={size} height={size} aria-hidden>
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} style={{ stroke: "var(--muted-soft)" }} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} style={{ stroke: track }} />
         <circle
           cx={size / 2}
           cy={size / 2}
           r={r}
           fill="none"
-          style={{ stroke: low ? "var(--absent)" : "var(--present)" }}
+          style={{ stroke: fill }}
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={`${(pct / 100) * c} ${c}`}

@@ -1,6 +1,6 @@
-# UREP Attendance, student app
+# UDST Attendance, student app
 
-The app students use to see their attendance from the PALM readers, for the UREP 32 student attendance project. It is published as a web app first, with a store release to follow.
+The app UDST students use to see their attendance from the PALM readers, built for the UREP 32 student attendance research project at the University of Doha for Science and Technology. It is published as a web app first, with a store release to follow.
 
 **Preview:** https://attendance.alirezaafshan.com/
 

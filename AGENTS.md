@@ -32,6 +32,8 @@ Student-facing app for the UREP 32 PALM reader attendance project (UDST). Alirez
 - The app runs on deterministic, fictional demo data (`demo.ts`) until the API is hosted. Replace `buildModel`'s inputs with API calls instead of changing screens.
 - All times are Asia/Qatar (fixed UTC+3), whatever the viewer's timezone.
 - `MIN_ATTENDANCE_PERCENT` (85%) is a proposed parameter. It is not in the API yet.
+- UDST theme (requested by the PI, Dr. Wagdi): palette and Lato typeface from udst.edu.qa (`--brand: #0055b8`), with the Arabic name in Noto Kufi Arabic. The official UDST logo is not used; get the approved asset from UDST communications before adding it. The preview must say it is a research preview, not an official UDST service.
+- There is no password field while the app is hosted outside a UDST domain. A UDST-branded password prompt on another domain would look like phishing. Real sign-in will use UDST accounts.
 - Hash routes (`#/courses/2`) keep the static server simple and work inside the desktop phone frame.
 - The server's CSP is `'self'` only. Do not add inline scripts, inline `<style>`, or third-party assets.
 

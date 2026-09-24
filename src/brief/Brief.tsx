@@ -10,10 +10,13 @@ const ORG = "https://github.com/urep-student-attendance";
 export function Brief({ inApp, rules }: { inApp?: boolean; rules: RulesProps }) {
   return (
     <div className={`brief${inApp ? " in-app" : ""}`}>
-      <p className="brief-eyebrow">UREP 32 · Student attendance</p>
-      <h1>Student app, web preview</h1>
+      <p className="brief-eyebrow">University of Doha for Science and Technology · UREP 32</p>
+      <p className="brief-ar" lang="ar" dir="rtl">
+        جامعة الدوحة للعلوم والتكنولوجيا
+      </p>
+      <h1>UDST Attendance</h1>
       <p className="brief-lede">
-        The mobile app students will use to see their attendance from the PALM readers.{" "}
+        Web preview of the mobile app UDST students will use to see their attendance from the PALM readers.{" "}
         {inApp ? "It" : "Try it on the right. It"} runs on demo data until the attendance API is hosted.
       </p>
       <ul className="brief-meta">
@@ -205,7 +208,10 @@ export function Brief({ inApp, rules }: { inApp?: boolean; rules: RulesProps }) 
             Attendance API prototype <ArrowUpRight size={13} aria-hidden />
           </a>
         </p>
-        <p>The student, instructors, rooms and scans in this preview are fictional. All times are Doha time.</p>
+        <p>
+          A UREP 32 student research project at UDST. This is a preview, not an official UDST service yet. The
+          student, instructors, rooms and scans are fictional, and all times are Doha time.
+        </p>
       </footer>
     </div>
   );

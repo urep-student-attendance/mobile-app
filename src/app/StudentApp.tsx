@@ -79,7 +79,7 @@ export function StudentApp({
   const active = TABS.some((t) => t.path === page) ? page : "today";
 
   return (
-    <div className="app">
+    <div className={`app${!signedIn && page !== "about" ? " is-signin" : ""}`}>
       <div className="statusbar" aria-hidden>
         <span className="num">{formatClock(model.now)}</span>
         <span>Doha</span>
