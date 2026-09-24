@@ -323,7 +323,7 @@ function Timeline({ params, compact }: { params: Parameters; compact?: boolean }
   return (
     <div className="timeline">
       <svg viewBox={`0 0 ${W} 74`} role="img" aria-label={describe(params)}>
-        <rect x={x(min)} y={y} width={x(max) - x(min)} height={h} rx={6} style={{ fill: "var(--absent-soft)" }} />
+        <rect x={x(min)} y={y} width={x(max) - x(min)} height={h} rx={6} style={{ fill: "var(--muted-soft)" }} />
         <rect x={x(-params.before)} y={y} width={x(0) - x(-params.before)} height={h} style={{ fill: "var(--present)" }} />
         {cutoff > 0 && (
           <rect x={x(0)} y={y} width={x(cutoff) - x(0)} height={h} style={{ fill: "var(--late)", opacity: 0.85 }} />
@@ -354,7 +354,7 @@ function Timeline({ params, compact }: { params: Parameters; compact?: boolean }
           <i style={{ background: "var(--late)" }} /> Late, still counted
         </span>
         <span>
-          <i style={{ background: "var(--absent-soft)", outline: "1px solid var(--line-strong)" }} /> Not counted
+          <i style={{ background: "var(--muted-soft)", outline: "1px solid var(--line-strong)" }} /> Not counted
         </span>
       </div>
     </div>

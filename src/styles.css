@@ -19,7 +19,9 @@
   --late: #8f5200;
   --late-soft: #fcefd6;
   --absent: #b42318;
-  --absent-soft: #fbe4e1;
+  --absent-soft: #f7e8e6;
+  /* red that stays red, not pink, on the UDST blue panel */
+  --absent-on-brand: #ff7a6b;
   --muted-soft: #ebebea;
   --frame: #11161d;
   --shadow: 0 1px 2px rgb(33 37 41 / 0.06), 0 8px 24px rgb(33 37 41 / 0.06);
@@ -520,7 +522,7 @@ a {
 }
 
 .summary .dot-absent {
-  background: #ffa597;
+  background: var(--absent-on-brand);
 }
 
 .summary-note {
@@ -534,10 +536,17 @@ a {
   align-items: flex-start;
   margin-top: 10px;
   padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--absent);
   border-radius: var(--r-card);
-  background: var(--absent-soft);
+  background: var(--surface);
   color: var(--ink);
   text-decoration: none;
+}
+
+.alert:hover {
+  border-color: var(--line-strong);
+  border-left-color: var(--absent);
 }
 
 .alert svg {

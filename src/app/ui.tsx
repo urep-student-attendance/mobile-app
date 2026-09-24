@@ -54,7 +54,7 @@ export function Ring({
   onBrand?: boolean;
 }) {
   const track = onBrand ? "rgb(255 255 255 / 0.22)" : "var(--muted-soft)";
-  const fill = onBrand ? (low ? "#ffb4a9" : "#ffffff") : low ? "var(--absent)" : "var(--present)";
+  const fill = onBrand ? (low ? "var(--absent-on-brand)" : "#ffffff") : low ? "var(--absent)" : "var(--present)";
   const stroke = 9;
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
