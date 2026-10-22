@@ -1,9 +1,15 @@
 import { ArrowUpRight, CircleDot, RotateCcw } from "lucide-react";
 import { useState } from "react";
-import { DEFAULT_PARAMS, MIN_ATTENDANCE_PERCENT, type Model } from "../domain/model";
+import { MIN_ATTENDANCE_PERCENT, type Model } from "../domain/model";
 import type { Parameters } from "../domain/types";
 
-export type RulesProps = { params: Parameters; setParams: (p: Parameters) => void; model: Model };
+export type RulesProps = {
+  params: Parameters;
+  setParams: (p: Parameters) => void;
+  model: Model;
+  /** The rules in force: the server's parameters when signed in through the API. */
+  defaults: Parameters;
+};
 
 const ORG = "https://github.com/urep-student-attendance";
 
@@ -17,12 +23,15 @@ export function Brief({ inApp, rules }: { inApp?: boolean; rules: RulesProps }) 
       <h1>UDST Attendance</h1>
       <p className="brief-lede">
         Web preview of the mobile app UDST students will use to see their attendance from the PALM readers.{" "}
-        {inApp ? "It" : "Try it on the right. It"} runs on demo data until the attendance API is hosted.
+        {inApp ? "It" : "Try it on the right. It"}{" "}
+        {rules.model.source === "api"
+          ? "is reading from the attendance API, fed by simulated palm readers."
+          : "can read from the attendance API, or open a fictional demo student."}
       </p>
       <ul className="brief-meta">
         <li>Mobile app lead: Alireza Afshan</li>
         <li>Build {__BUILD_SHA__}</li>
-        <li>Fictional demo student</li>
+        <li>{rules.model.source === "api" ? "Simulated student from the API" : "Fictional demo student"}</li>
       </ul>
 
       <section className="brief-section" aria-labelledby="rules-h">
@@ -174,7 +183,8 @@ export function Brief({ inApp, rules }: { inApp?: boolean; rules: RulesProps }) 
           <li>
             <CircleDot aria-hidden />
             <span>
-              <strong>Connect to the attendance API</strong> once it's hosted, replacing the demo data.
+              <strong>Real readers</strong>: point the WavePass500 device app at the attendance API in place of the
+              simulator.
             </span>
           </li>
           <li>
@@ -217,9 +227,9 @@ export function Brief({ inApp, rules }: { inApp?: boolean; rules: RulesProps }) 
   );
 }
 
-function RulesPlayground({ params, setParams, model, compact }: RulesProps & { compact?: boolean }) {
-  const [lastAfter, setLastAfter] = useState(params.after ?? DEFAULT_PARAMS.after!);
-  const isDefault = params.before === DEFAULT_PARAMS.before && params.after === DEFAULT_PARAMS.after;
+function RulesPlayground({ params, setParams, model, defaults, compact }: RulesProps & { compact?: boolean }) {
+  const [lastAfter, setLastAfter] = useState(params.after ?? defaults.after ?? 20);
+  const isDefault = params.before === defaults.before && params.after === defaults.after;
   const lowest = model.sections
     .filter((s) => s.stats.rate !== null)
     .sort((a, b) => a.stats.rate! - b.stats.rate!)[0];
@@ -278,7 +288,8 @@ function RulesPlayground({ params, setParams, model, compact }: RulesProps & { c
 
       <div className="result" role="status">
         <span>
-          Demo student: <strong className="num">{model.overall.rate}%</strong> overall
+          {model.source === "api" ? model.student.name : "Demo student"}:{" "}
+          <strong className="num">{model.overall.rate ?? "–"}%</strong> overall
           {lowest && (
             <>
               , lowest <strong className="num">{lowest.stats.rate}%</strong> in {lowest.code}
@@ -290,13 +301,20 @@ function RulesPlayground({ params, setParams, model, compact }: RulesProps & { c
           type="button"
           disabled={isDefault}
           onClick={() => {
-            setLastAfter(DEFAULT_PARAMS.after!);
-            setParams(DEFAULT_PARAMS);
+            setLastAfter(defaults.after ?? 20);
+            setParams(defaults);
           }}
         >
-          <RotateCcw aria-hidden /> Defaults
+          <RotateCcw aria-hidden /> {model.source === "api" ? "Server rules" : "Defaults"}
         </button>
       </div>
+      {model.source === "api" && (
+        <p className="playground-note">
+          {model.official
+            ? "Showing the attendance the server recorded."
+            : "Trying other rules: statuses are recalculated in the app and differ from the server's record."}
+        </p>
+      )}
     </div>
   );
 }

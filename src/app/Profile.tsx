@@ -1,6 +1,6 @@
 import { ChevronRight, Clock3, Copy, Info, LogOut, MapPin, ScanLine, ShieldCheck, TimerOff } from "lucide-react";
 import type { Model } from "../domain/model";
-import { formatDay } from "../domain/time";
+import { dohaDate, formatDay } from "../domain/time";
 import { initials, ScreenHead } from "./ui";
 
 export function Profile({ model, onSignOut }: { model: Model; onSignOut: () => void }) {
@@ -24,27 +24,44 @@ export function Profile({ model, onSignOut }: { model: Model; onSignOut: () => v
         <section className="card">
           <div className="card-head">
             <h2>Palm registration</h2>
-            <span className="chip chip-present">
-              <ShieldCheck aria-hidden /> Registered
-            </span>
+            {palm ? (
+              <span className="chip chip-present">
+                <ShieldCheck aria-hidden /> Registered
+              </span>
+            ) : (
+              <span className="chip chip-absent">
+                <TimerOff aria-hidden /> Not linked
+              </span>
+            )}
           </div>
-          <dl className="kv">
-            <div>
-              <dt>Date</dt>
-              <dd>{formatDay(palm.registeredAt)} 2026</dd>
-            </div>
-            <div>
-              <dt>Where</dt>
-              <dd>Registration Office</dd>
-            </div>
-            <div>
-              <dt>Palm template</dt>
-              <dd className="num">•••• {palm.templateRef}</dd>
-            </div>
-          </dl>
-          <p className="card-note">
-            If a reader doesn't recognise your palm, visit the Registration Office to register it again.
-          </p>
+          {palm ? (
+            <>
+              <dl className="kv">
+                <div>
+                  <dt>Date</dt>
+                  <dd>
+                    {formatDay(palm.registeredAt)} {dohaDate(palm.registeredAt).slice(0, 4)}
+                  </dd>
+                </div>
+                <div>
+                  <dt>Where</dt>
+                  <dd>Registration Office</dd>
+                </div>
+                <div>
+                  <dt>Palm template</dt>
+                  <dd className="num">•••• {palm.templateRef}</dd>
+                </div>
+              </dl>
+              <p className="card-note">
+                If a reader doesn't recognise your palm, visit the Registration Office to register it again.
+              </p>
+            </>
+          ) : (
+            <p className="card-note">
+              No palm is linked to your student ID, so your scans can't count towards attendance. Visit the
+              Registration Office to register your palm.
+            </p>
+          )}
         </section>
 
         <section className="card">

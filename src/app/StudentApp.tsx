@@ -1,5 +1,6 @@
 import { BookOpen, CalendarDays, ChevronLeft, ScanLine, UserRound } from "lucide-react";
 import { useEffect, useRef } from "react";
+import type { Session } from "../App";
 import type { Model } from "../domain/model";
 import { formatClock } from "../domain/time";
 import { Brief, type RulesProps } from "../brief/Brief";
@@ -19,15 +20,24 @@ const TABS = [
 
 export function StudentApp({
   model,
-  signedIn,
-  setSignedIn,
+  session,
+  loading,
+  apiUp,
+  signInError,
+  onSignIn,
+  onSignOut,
   rules,
 }: {
   model: Model;
-  signedIn: boolean;
-  setSignedIn: (v: boolean) => void;
+  session: Session;
+  loading: boolean;
+  apiUp: boolean | null;
+  signInError: string | null;
+  onSignIn: (session: NonNullable<Session>) => void;
+  onSignOut: () => void;
   rules: RulesProps;
 }) {
+  const signedIn = session !== null;
   const route = useHashRoute();
   const main = useRef<HTMLElement>(null);
   const [page = "today", param] = route;
@@ -50,11 +60,19 @@ export function StudentApp({
   } else if (!signedIn) {
     content = (
       <SignIn
-        onSignIn={() => {
-          setSignedIn(true);
+        apiUp={apiUp}
+        error={signInError}
+        onSignIn={(next) => {
+          onSignIn(next);
           navigate("today");
         }}
       />
+    );
+  } else if (loading) {
+    content = (
+      <p className="loading" role="status">
+        Loading your attendance…
+      </p>
     );
   } else if (page === "courses" && param) {
     content = <CourseDetail model={model} sectionId={Number(param)} />;
@@ -67,7 +85,7 @@ export function StudentApp({
       <Profile
         model={model}
         onSignOut={() => {
-          setSignedIn(false);
+          onSignOut();
           navigate("");
         }}
       />
@@ -87,7 +105,7 @@ export function StudentApp({
       <main className="app-main" ref={main}>
         {content}
       </main>
-      {signedIn && page !== "about" && (
+      {signedIn && !loading && page !== "about" && (
         <nav className="tabbar" aria-label="Main">
           {TABS.map(({ path, label, icon: Icon }) => (
             <a key={path} className="tab" href={`#/${path}`} aria-current={active === path ? "page" : undefined}>

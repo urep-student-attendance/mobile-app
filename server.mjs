@@ -1,10 +1,15 @@
 // Minimal static server for the built preview. Routes are hash-based, so only real files are served.
+// With ATTENDANCE_API_URL set, it also proxies the attendance API's read-only student endpoints
+// under /api, so the app stays same-origin (CSP connect-src 'self') and the public site can
+// never post scans.
 import http from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { extname, resolve, sep } from "node:path";
 
 const root = resolve("dist");
 const port = Number(process.env.PORT || 8080);
+const api = process.env.ATTENDANCE_API_URL?.replace(/\/+$/, "");
+const API_PATHS = [/^\/health$/, /^\/students\/\d{1,10}\/overview$/];
 const types = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -33,6 +38,9 @@ http
         return res.end();
       }
       const url = new URL(req.url, "http://localhost");
+      if (url.pathname === "/api" || url.pathname.startsWith("/api/")) {
+        return await proxyApi(url.pathname.slice(4), req, res);
+      }
       if (url.pathname === "/healthz") {
         await stat(resolve(root, "index.html"));
         res.writeHead(200, { "Content-Type": "application/json", "Cache-Control": "no-store" });
@@ -69,4 +77,23 @@ http
       res.end("Invalid request");
     }
   })
-  .listen(port, "0.0.0.0", () => console.log(`urep-attendance listening on ${port}`));
+  .listen(port, "0.0.0.0", () =>
+    console.log(`urep-attendance listening on ${port}${api ? `, proxying /api to ${api}` : ""}`),
+  );
+
+async function proxyApi(path, req, res) {
+  const headers = { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", ...security };
+  if (!api || !API_PATHS.some((allowed) => allowed.test(path))) {
+    res.writeHead(404, headers);
+    return res.end('{"error":"Not found"}');
+  }
+  try {
+    const upstream = await fetch(api + path, { signal: AbortSignal.timeout(10_000) });
+    const body = await upstream.text();
+    res.writeHead(upstream.status, headers);
+    res.end(req.method === "HEAD" ? undefined : body);
+  } catch {
+    res.writeHead(502, headers);
+    res.end('{"error":"Attendance API unavailable"}');
+  }
+}

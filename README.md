@@ -4,7 +4,9 @@ The app UDST students use to see their attendance from the PALM readers, built f
 
 **Preview:** https://attendance.alirezaafshan.com/
 
-It currently runs on fictional demo data shaped like the [attendance API](https://github.com/urep-student-attendance/attendance-api) tables. The attendance rules are a direct port of the API's processing, so changing `Time_before_lecture_start` or `Time_after_lecture_start` in the preview gives the same results the server would.
+It reads from the [attendance API](https://github.com/urep-student-attendance/attendance-api) when one is configured, and otherwise runs on a fictional demo student shaped like the API's tables. Until the WavePass500 readers are connected, the API is fed by its palm reader simulator, so every student there is simulated.
+
+Signed in through the API, the app shows the attendance the server recorded. The attendance rules are a direct port of the API's processing, so trying other values for `Time_before_lecture_start` or `Time_after_lecture_start` in the preview recalculates every class exactly as the server would.
 
 ## Screens
 
@@ -21,5 +23,14 @@ npm run dev      # http://localhost:5173
 npm run check    # typecheck + tests + production build
 npm start        # serve dist/ on :8080
 ```
+
+To use a running attendance API, set `ATTENDANCE_API_URL` for either server. Both proxy it under `/api`, so the app stays same-origin:
+
+```bash
+ATTENDANCE_API_URL=http://localhost:3000 npm run dev
+ATTENDANCE_API_URL=http://localhost:3000 npm start
+```
+
+Seed and simulate in the API repo (`npm run sim -- seed --from 2026-08-30 --to 2026-12-10`, then `npm run sim -- day --date …` for each day), and sign in with a student ID from `npm run sim -- campus`. Without `ATTENDANCE_API_URL`, or when the API is unreachable, the sign-in screen offers the demo student.
 
 Requires Node 22+.

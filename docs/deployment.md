@@ -8,7 +8,7 @@ Deploy Manager on Alireza's VPS releases validated `main` commits. The workflow 
 - Checkout: `/opt/urep-attendance/app`.
 - Production/candidate loopback ports: `3250` / `3251`; container: `8080`.
 - Readiness: `/healthz`. Public build identity: `/version.json`.
-- Application runtime secrets: none. The per-app webhook secret (`UREP_ATTENDANCE_DEPLOY_WEBHOOK_SECRET`) lives in the manager environment and in the repository secret `DEPLOY_WEBHOOK_SECRET`.
+- Application runtime secrets: none. `ATTENDANCE_API_URL` is not set in production yet, so the public preview serves the demo student until an attendance API is hosted. The per-app webhook secret (`UREP_ATTENDANCE_DEPLOY_WEBHOOK_SECRET`) lives in the manager environment and in the repository secret `DEPLOY_WEBHOOK_SECRET`.
 - Caddy owns the public route. Cloudflare owns its proxied A record.
 - The registration spec is `deploy/fleet.json`, applied additively with Deploy Manager's `scripts/register-app.mjs`.
 

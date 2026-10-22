@@ -1,6 +1,6 @@
 import { ChevronLeft, MapPin, UserRound } from "lucide-react";
 import { useState } from "react";
-import { MIN_ATTENDANCE_PERCENT, type LectureView, type Model, type SectionView } from "../domain/model";
+import { courseCode, MIN_ATTENDANCE_PERCENT, type LectureView, type Model, type SectionView } from "../domain/model";
 import { formatDay, formatRange, formatTime, WEEKDAY_SHORT } from "../domain/time";
 import { absentDetail, AttendanceBar, ScreenHead, StatusChip } from "./ui";
 
@@ -22,7 +22,7 @@ export function Courses({ model }: { model: Model }) {
           <a key={s.section.id} className="card course-card link-card" href={`#/courses/${s.section.id}`}>
             <div>
               <div className="course-code">
-                {s.code} · Section {s.section.section}
+                {courseCode(s.course)} · Section {s.section.section}
               </div>
               <h2 className="course-name">{s.course.title}</h2>
             </div>
@@ -85,7 +85,7 @@ export function CourseDetail({ model, sectionId }: { model: Model; sectionId: nu
         <ChevronLeft size={20} aria-hidden /> Courses
       </a>
       <div className="detail-head">
-        <ScreenHead title={s.course.title} sub={`${s.code} · Section ${s.section.section}`} />
+        <ScreenHead title={s.course.title} sub={`${courseCode(s.course)} · Section ${s.section.section}`} />
       </div>
       <div className="meta" style={{ margin: "-8px 2px 16px" }}>
         <span>{schedule(s)}</span>

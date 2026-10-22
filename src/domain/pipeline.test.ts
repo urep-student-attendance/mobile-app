@@ -3,6 +3,7 @@ import { explainScans, mapTimeLogs, processAttendance, REASONS } from "./pipelin
 import { dohaDate, dohaInstant, MINUTE } from "./time";
 import { buildLectures, buildTimeLogs, SECTIONS } from "./demo";
 import { buildModel, DEFAULT_PARAMS } from "./model";
+import { demoDataset } from "./source";
 import type { DeviceRoom, Lecture, PalmReg, Parameters, Section, TimeLog } from "./types";
 
 const STUDENT = 60000001;
@@ -126,16 +127,16 @@ describe("demo data", () => {
 
   it("shows an open scan window before the student has scanned", () => {
     // MATH 1102 meets Wed 11:00; its window opens at 10:50.
-    const model = buildModel(dohaInstant("2026-09-23", "10:55"), DEFAULT_PARAMS);
+    const model = buildModel(dohaInstant("2026-09-23", "10:55"), DEFAULT_PARAMS, demoDataset());
     const math = model.lectures.find((v) => v.lecture.lecture_date === "2026-09-23" && v.section.code === "MATH 1102")!;
     expect(math.status).toBe("open");
-    expect(buildModel(dohaInstant("2026-09-23", "10:40"), DEFAULT_PARAMS).lectureById.get(math.lecture.id)!.status).toBe(
+    expect(buildModel(dohaInstant("2026-09-23", "10:40"), DEFAULT_PARAMS, demoDataset()).lectureById.get(math.lecture.id)!.status).toBe(
       "upcoming",
     );
   });
 
   it("explains absences with the scan that was rejected", () => {
-    const model = buildModel(now, DEFAULT_PARAMS);
+    const model = buildModel(now, DEFAULT_PARAMS, demoDataset());
     const absentWithScan = model.lectures.filter((v) => v.status === "absent" && v.rejected);
     expect(absentWithScan.length).toBeGreaterThan(0);
     for (const v of absentWithScan) {
@@ -144,8 +145,8 @@ describe("demo data", () => {
   });
 
   it("recomputes attendance when rules change", () => {
-    const strict = buildModel(now, DEFAULT_PARAMS).overall;
-    const lenient = buildModel(now, { before: 10, after: null }).overall;
+    const strict = buildModel(now, DEFAULT_PARAMS, demoDataset()).overall;
+    const lenient = buildModel(now, { before: 10, after: null }, demoDataset()).overall;
     expect(lenient.attended).toBeGreaterThan(strict.attended);
     expect(strict.counted).toBeGreaterThan(20);
     expect(strict.missed).toBeGreaterThan(0);

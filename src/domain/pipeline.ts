@@ -206,7 +206,8 @@ export function explainScans(input: {
           minutes: Math.ceil((nearest.start - m.time) / MINUTE),
         };
       } else {
-        outcome = { kind: "too_late", lectureId: nearest.id, minutes: lateMinutes(nearest, m.time) };
+        // Rounded up, like too_early: 20 min 30 s after start is past a 20-minute cutoff.
+        outcome = { kind: "too_late", lectureId: nearest.id, minutes: Math.ceil((m.time - nearest.start) / MINUTE) };
       }
     }
     result.push({ log, roomId: m.room_id, outcome });

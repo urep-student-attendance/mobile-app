@@ -1,18 +1,5 @@
 // Turns the table-shaped data into what the student screens show.
 import {
-  COURSES,
-  DEVICES,
-  PALM_REG,
-  REGISTRATIONS,
-  ROOMS,
-  SECTIONS,
-  SEMESTER,
-  STUDENT,
-  STUDENT_PALM,
-  buildLectures,
-  buildTimeLogs,
-} from "./demo";
-import {
   explainScans,
   lateMinutes,
   mapTimeLogs,
@@ -21,8 +8,9 @@ import {
   windowStart,
   type ExplainedScan,
 } from "./pipeline";
+import type { Dataset, Semester } from "./source";
 import { dohaDate } from "./time";
-import type { AttendanceRow, Course, Lecture, Parameters, Room, Section } from "./types";
+import type { AttendanceRow, Course, Lecture, Parameters, Room, Section, Student } from "./types";
 
 /** Proposed parameter: attendance below this percentage is flagged. Not in the API yet. */
 export const MIN_ATTENDANCE_PERCENT = 85;
@@ -66,9 +54,13 @@ export type SectionView = {
 };
 
 export type Model = {
-  student: typeof STUDENT;
-  semester: typeof SEMESTER;
-  palm: { registeredAt: number; templateRef: string };
+  source: Dataset["source"];
+  student: Student;
+  semester: Semester;
+  /** null = no palm linked to this student in palm_reg. */
+  palm: { registeredAt: number; templateRef: string } | null;
+  /** true = statuses come from the server's student_attendance; false = recomputed here. */
+  official: boolean;
   sections: SectionView[];
   lectures: LectureView[];
   overall: Stats;
@@ -93,24 +85,38 @@ function finish(stats: Stats): Stats {
   return { ...stats, rate, absencesLeft: allowed - stats.missed };
 }
 
-export function buildModel(now: number, params: Parameters): Model {
-  const lectures = buildLectures();
-  const logs = buildTimeLogs(lectures, now);
-  const { mapped, unmapped } = mapTimeLogs(logs, PALM_REG, DEVICES);
-  // The server would only process lectures whose scans exist; processing all is equivalent for display.
-  const attendance = processAttendance(lectures, SECTIONS, REGISTRATIONS, mapped, params);
-  const rowByLecture = new Map(
-    attendance.filter((a) => a.student_id === STUDENT.student_id).map((a) => [a.lecture_id, a]),
-  );
-  const roomById = new Map(ROOMS.map((r) => [r.id, r]));
+export function sameParams(a: Parameters, b: Parameters | null): boolean {
+  return b !== null && a.before === b.before && a.after === b.after;
+}
 
-  const sections: SectionView[] = SECTIONS.map((section) => {
-    const course = COURSES.find((c) => c.id === section.course_id)!;
+export function buildModel(now: number, params: Parameters, data: Dataset): Model {
+  const { student, lectures } = data;
+  const logs = data.logsAt(now);
+  const palmReg = data.palmReg ? [data.palmReg] : [];
+  const { mapped, unmapped } = mapTimeLogs(logs, palmReg, data.devices);
+  // The server's rows are the record. With other rules (the rules playground) the same
+  // pipeline recomputes them here; pipeline.test.ts keeps both in step.
+  const official = data.serverAttendance !== null && sameParams(params, data.serverParams);
+  const attendance = official
+    ? data.serverAttendance!
+    : processAttendance(lectures, data.sections, data.registrations, mapped, params);
+  const rowByLecture = new Map(
+    attendance.filter((a) => a.student_id === student.student_id).map((a) => [a.lecture_id, a]),
+  );
+  const roomById = new Map(data.rooms.map((r) => [r.id, r]));
+
+  const sectionsPerCourse = new Map<number, number>();
+  for (const s of data.sections) sectionsPerCourse.set(s.course_id, (sectionsPerCourse.get(s.course_id) ?? 0) + 1);
+
+  const sections: SectionView[] = data.sections.map((section) => {
+    const course = data.courses.find((c) => c.id === section.course_id)!;
     return {
       section,
       course,
       room: roomById.get(section.room_id)!,
-      code: courseCode(course),
+      // A lecture and its lab share a course code; tell them apart by section.
+      code:
+        (sectionsPerCourse.get(course.id) ?? 0) > 1 ? `${courseCode(course)} ${section.section}` : courseCode(course),
       stats: emptyStats(),
       lectures: [],
     };
@@ -149,19 +155,21 @@ export function buildModel(now: number, params: Parameters): Model {
     s.stats = finish(s.stats);
   }
 
-  const scans = explainScans({
-    studentId: STUDENT.student_id,
-    palm: STUDENT_PALM,
-    logs,
-    mapped,
-    unmapped,
-    lectures,
-    sections: SECTIONS,
-    registrations: REGISTRATIONS,
-    attendance,
-    devices: DEVICES,
-    params,
-  });
+  const scans = data.palmReg
+    ? explainScans({
+        studentId: student.student_id,
+        palm: data.palmReg.student_palm,
+        logs,
+        mapped,
+        unmapped,
+        lectures,
+        sections: data.sections,
+        registrations: data.registrations,
+        attendance,
+        devices: data.devices,
+        params,
+      })
+    : [];
 
   const lectureById = new Map(views.map((v) => [v.lecture.id, v]));
   for (const scan of scans) {
@@ -172,9 +180,13 @@ export function buildModel(now: number, params: Parameters): Model {
   }
 
   return {
-    student: STUDENT,
-    semester: SEMESTER,
-    palm: { registeredAt: PALM_REG[0].created_at, templateRef: STUDENT_PALM.slice(-4).toUpperCase() },
+    source: data.source,
+    student,
+    semester: data.semester,
+    palm: data.palmReg
+      ? { registeredAt: data.palmReg.created_at, templateRef: data.palmReg.student_palm.slice(-4).toUpperCase() }
+      : null,
+    official,
     sections,
     lectures: views,
     overall: finish(overall),

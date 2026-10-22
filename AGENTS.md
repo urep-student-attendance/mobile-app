@@ -29,7 +29,9 @@ Student-facing app for the UREP 32 PALM reader attendance project (UDST). Alirez
 
 - React 19 + Vite + TypeScript. Web first; the store build is planned as a Capacitor wrapper of this same codebase, so avoid browser-only APIs without a fallback.
 - `src/domain/` mirrors the attendance-api schema (`github.com/urep-student-attendance/attendance-api`). `pipeline.ts` is a client port of the API's mapping and attendance SQL. Keep the rules and reason strings identical. `pipeline.test.ts` holds the parity scenarios.
-- The app runs on deterministic, fictional demo data (`demo.ts`) until the API is hosted. Replace `buildModel`'s inputs with API calls instead of changing screens.
+- Data comes from a `Dataset` (`src/domain/source.ts`): either the deterministic demo (`demo.ts`) or the API's `GET /students/:id/overview`. Screens only see the `Model` from `buildModel`. Under the server's own parameters the model shows the server's `student_attendance` rows (`model.official`). With other rules from the playground it recomputes them with `pipeline.ts`.
+- The API is reached only through the same-origin `/api` proxy (`server.mjs` in production, Vite in dev), enabled by `ATTENDANCE_API_URL`. The proxy forwards only GET `/health` and `/students/:id/overview`, so the public site can't post scans. If the variable is unset or the API is down, sign-in falls back to the demo student.
+- The overview endpoint has no authentication. That is acceptable only while the API holds simulated students. Real student data needs UDST sign-in in front of it first.
 - All times are Asia/Qatar (fixed UTC+3), whatever the viewer's timezone.
 - `MIN_ATTENDANCE_PERCENT` (85%) is a proposed parameter. It is not in the API yet.
 - UDST theme (requested by the PI, Dr. Wagdi): palette and Lato typeface from udst.edu.qa (`--brand: #0055b8`), with the Arabic name in Noto Kufi Arabic. The official UDST logo is not used; get the approved asset from UDST communications before adding it. The preview must say it is a research preview, not an official UDST service.
@@ -39,7 +41,7 @@ Student-facing app for the UREP 32 PALM reader attendance project (UDST). Alirez
 
 ### Acceptance
 
-The desktop layout shows the project brief and the app in a phone frame; narrow screens show the app full screen with the brief at `#/about`. The rules controls recompute every screen. There is no horizontal overflow at 375px, and light and dark themes both work.
+Signing in with a simulated student ID shows that student's API data on every screen, an unknown ID shows an error, and an unreachable API falls back to the demo. The desktop layout shows the project brief and the app in a phone frame; narrow screens show the app full screen with the brief at `#/about`. The rules controls recompute every screen. There is no horizontal overflow at 375px, and light and dark themes both work.
 
 ### Deployment
 
